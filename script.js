@@ -12,6 +12,7 @@ const paddleHeight = 10
 const paddleWidth = 50
 const paddleDiff = 25
 let paddleBottomX = 225
+let paddleTopX = 225
 let playerMoved = false
 let paddleContact = false
 
@@ -49,38 +50,38 @@ const winningScore = 7
 // Render Everything on Canvas
 function renderCanvas() {
     // Canvas Background
-    context.fillStyle = 'black'
-    context.fillRect(0, 0, width, height)
+    //context.fillStyle = 'black'
+    //context.fillRect(0, 0, width, height)
 
     //Paddle Color
-    context.fillStyle = 'white'
+    //context.fillStyle = 'white'
 
     // Player Paddle (Bottom)
-    context.fillRect(paddleBottomX, height - 20, paddleWidth, paddleHeight);
+    //context.fillRect(paddleBottomX, height - 20, paddleWidth, paddleHeight);
 
     // Computer Paddle(Top)
-    context.fillRect(paddleTopX, 10, paddleWidth, paddleHeight)
+    //context.fillRect(paddleTopX, 10, paddleWidth, paddleHeight)
 
 
     // Dashed Center Line
-    context.beginPath();
-    context.setLineDash([4])
-    context.moveTo(0, 350);
-    context.lineTo(500, 350)
-    context.strokeStyle = 'grey'
-    context.stroke()
+    //context.beginPath();
+    //context.setLineDash([4])
+    //context.moveTo(0, 350);
+    //context.lineTo(500, 350)
+    //context.strokeStyle = 'grey'
+    //context.stroke()
 
 
     // Ball
-    context.beginPath()
-    context.arc(ballX, ballY, ballRadius, 2 * Math.PI, false)
-    context.fillStyle = 'white'
-    context.fill()
+    //context.beginPath()
+    //context.arc(ballX, ballY, ballRadius, 2 * Math.PI, false)
+    //context.fillStyle = 'white'
+    //context.fill()
 
     // Score
-    context.font = '32px Courier New'
-    context.fillText(playerScore, 20, canvas.height / 2 + 50)
-    context.fillText(computerScore, 20, canvas.height / 2 - 30)
+    //context.font = '32px Courier New'
+    //context.fillText(playerScore, 20, canvas.height / 2 + 50)
+    //context.fillText(computerScore, 20, canvas.height / 2 - 30)
 
 }
 
@@ -91,3 +92,152 @@ function createCanvas() {
     body.appendChild(canvas)
     renderCanvas()
 }
+ // Remove This 
+createCanvas();
+
+// Reset Ball to Center
+function ballReset() {
+    ballX = width / 2
+    ballY = height / 2
+    speedY = -3
+    paddleContact = false
+}
+
+// Adjust Ball Movement
+function ballMove () {
+    // Vertical Speed
+    ballY += -speedY
+    // Horizontal Speed
+    if (playerMoved && paddleContact){
+        ballX += speedX
+    }
+}
+
+// Determine What Ball Bounces off, Score Points, Reset Ball
+function ballBoundaries() {
+    // Bounce off Left Wall
+    if (ballX < 0 && speedX < 0){
+        speedX = -speedX
+    }
+    // Bounce off Right Wall
+    if (ballX > width && speedX > 0){
+        speedX = -speedX
+    }
+    // Bounce off player paddle (bottom)
+    if (ballY > height - paddleDiff){
+        if (ballX > paddleBottomX && ballX < paddleBottomX + paddleWidth){
+            paddleContact = true
+            // Add Speed on Hit
+            if (playerMoved){
+                speedY -= 1
+                // Max Speed
+                if (speedY < -5){
+                    speedY = -5
+                    computerScore = 6
+                }
+            }
+            speedY = -speedY
+            trajectoryX = ballX - (paddleBottomX + paddleDiff)
+            speedX = trajectoryX * 0.3
+        } else if (ballY > height){
+            // Reset Ball, add to computer Score
+            ballReset()
+            computerScore++
+        }
+    }
+    // Bounce off computer paddle (top)
+    if (ballY < paddleDiff){
+        // Add Speed on Hit
+        if (ballX > paddleTopX && ballX < paddleTopX + paddleWidth){
+            // Add Speed on Hit
+            if (playerMoved){
+                speedY += 1
+                // Max Speed
+                if (speedY > 5){
+                    speedY = 5
+                }
+            }
+            speedY = -speedY
+        } else if (ballY < 0){
+            // Reset Ball, add to player Score
+            ballReset()
+            playerScore++
+        }
+    }
+}
+
+
+// Computer Movement
+function computerAI(){
+    if (playerMoved){
+        if (paddleTopX + paddleDiff < ballX){
+            paddleTopX += computerSpeed
+        } else {
+            paddleTopX -= computerSpeed
+        }
+    }
+}
+
+function showGameOverEl(winner) {
+    // Hide Canvas
+
+    // // Container
+    // gameOverEl.textContext = ''
+    // gameOverEl.classList.add('game-over-container')
+    // Title
+    // const title = document.createElement('h1')
+   // title.textContent = `${winner} Wins`
+    // Button
+    //  const playAgainBtn = document.createElement('button')
+    //  playAgainBtn.setAttribute('onclick', 'startGame()')
+    //  playAgainBtn.textContent = 'Play Again'
+
+    // // Append
+}
+
+// Check if one player has a winning score, if they do, end game
+function gameOver() {
+   // if (playerScore === winningScore || computerScore == winningScore){
+    //    isGameOver = ''
+        // set Winner
+   //     let winner = '';
+   //     showGameOverEl(winner)
+ //   }
+}
+
+// Called Every Frame
+function animate() {
+   // renderCanvas()
+    //ballMove()
+   // ballBoundaries()
+    //computerAI()
+}
+// Start Game, Reset Everything
+function startGame() {
+   // if (isGameOver && !isNewGame){
+
+   // }
+    // isGameOver =;
+    //isNewGame =;
+    playerScore = 0
+    computerScore  = 0
+    ballReset();
+    createCanvas()
+    animate()
+    canvas.addEventListener('mousemove',(e) => {
+        console.log(e.clientX)
+        playerMoved = true
+        // Compensate for canvas being centered
+        paddleBottomX = e.clientX - canvasPosition - paddleDiff
+        if (paddleBottomX < paddleDiff) {
+            paddleBottomX = 0
+        }
+        if (paddleBottomX > width - paddleWidth){
+            paddleBottomX = width -paddleWidth
+        }
+        // Hide Cursor
+        canvas.style.cursor = 'none'
+    })
+}
+// On Load
+// startGame()
