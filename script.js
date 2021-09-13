@@ -1,4 +1,6 @@
 const { body } = document
+const canvas = document.createElement('canvas')
+const context = canvas.getContext('2d')
 
 const width = 500
 const height = 700
@@ -50,8 +52,8 @@ const winningScore = 7
 // Render Everything on Canvas
 function renderCanvas() {
     // Canvas Background
-    //context.fillStyle = 'black'
-    //context.fillRect(0, 0, width, height)
+    context.fillStyle = 'black'
+    context.fillRect(0, 0, width, height)
 
     //Paddle Color
     //context.fillStyle = 'white'
