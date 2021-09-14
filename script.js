@@ -95,7 +95,7 @@ function createCanvas() {
     renderCanvas()
 }
  // Remove This 
-createCanvas();
+//createCanvas();
 
 // Reset Ball to Center
 function ballReset() {
@@ -209,10 +209,10 @@ function gameOver() {
 
 // Called Every Frame
 function animate() {
-   // renderCanvas()
-    //ballMove()
-   // ballBoundaries()
-    //computerAI()
+     renderCanvas()
+    ballMove()
+    ballBoundaries()
+    computerAI()
 }
 // Start Game, Reset Everything
 function startGame() {
@@ -225,9 +225,9 @@ function startGame() {
     computerScore  = 0
     ballReset();
     createCanvas()
-    animate()
+    //animate()
+    setInterval(animate, 1000/60)
     canvas.addEventListener('mousemove',(e) => {
-        console.log(e.clientX)
         playerMoved = true
         // Compensate for canvas being centered
         paddleBottomX = e.clientX - canvasPosition - paddleDiff
@@ -242,4 +242,4 @@ function startGame() {
     })
 }
 // On Load
-// startGame()
+ startGame()
