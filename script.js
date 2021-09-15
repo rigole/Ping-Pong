@@ -181,7 +181,7 @@ function computerAI(){
 
 function showGameOverEl(winner) {
     // Hide Canvas
-    canvas.hidden = 'true'
+    canvas.hidden = true
      // Container
      gameOverEl.textContext = ''
      gameOverEl.classList.add('game-over-container')
@@ -224,7 +224,7 @@ function animate() {
 function startGame() {
     if (isGameOver && !isNewGame){
         body.removeChild(gameOverEl)
-        canvas.hidden = 'false'
+        canvas.hidden = false
     }
      isGameOver = false;
     isNewGame = false;
