@@ -1,6 +1,7 @@
 const { body } = document
 const canvas = document.createElement('canvas')
 const context = canvas.getContext('2d')
+const socket = io('http://localhost:3000');
 
 const width = 500
 const height = 700
@@ -27,18 +28,18 @@ const ballRadius = 5
 let speedY
 let speedX
 let trajectoryX
-let computerSpeed
+//let computerSpeed
 
 
 // Change Mobile Setting
 if (isMobile.matches){
     speedY = -2;
     speedX = speedY
-    computerSpeed = 4
+   // computerSpeed = 4
 } else {
     speedY = -1
     speedX = speedY
-    computerSpeed = 3
+   // computerSpeed = 3
 }
 
 // Score
@@ -169,7 +170,7 @@ function ballBoundaries() {
 
 
 // Computer Movement
-function computerAI(){
+/*function computerAI(){
     if (playerMoved){
         if (paddleTopX + paddleDiff < ballX){
             paddleTopX += computerSpeed
@@ -177,7 +178,7 @@ function computerAI(){
             paddleTopX -= computerSpeed
         }
     }
-}
+}*/
 
 function showGameOverEl(winner) {
     // Hide Canvas
@@ -208,12 +209,26 @@ function gameOver() {
     }
 }
 
+
+// Wait for Opponents
+function renderIntro(){
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, width, height);
+
+    // Intro Text
+    context.fillStyle = 'white';
+    context.font = "32px Courier New";
+    context.fillText("Waiting for opponent...", 20, (canvas.height / 2) - 30);
+}
+
+
+
 // Called Every Frame
 function animate() {
     renderCanvas()
     ballMove()
     ballBoundaries()
-    computerAI()
+    //computerAI()
     gameOver()
     if (!isGameOver){
         window.requestAnimationFrame(animate)
@@ -232,6 +247,7 @@ function startGame() {
     computerScore  = 0
     ballReset();
     createCanvas()
+    renderIntro()
     animate()
     //setInterval(animate, 1000/60)
     canvas.addEventListener('mousemove',(e) => {
