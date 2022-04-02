@@ -1,0 +1,19 @@
+{
+  "name": "multi-player-pong",
+  "version": "1.0.0",
+  "description": "In this repo I will recreate the famous ping pong game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rigole/Ping-Pong.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rigole/Ping-Pong/issues"
+  },
+  "homepage": "https://github.com/rigole/Ping-Pong#readme"
+}
