@@ -237,20 +237,22 @@ function animate() {
 
 }
 // Start Game, Reset Everything
-function startGame() {
-    if (isGameOver && !isNewGame){
+function loadGame() {
+    if (isGameOver && !isNewGame) {
         body.removeChild(gameOverEl)
         canvas.hidden = false
     }
-     isGameOver = false;
+    isGameOver = false;
     isNewGame = false;
     playerScore = 0
-    computerScore  = 0
+    computerScore = 0
     ballReset();
     createCanvas()
     renderIntro()
     animate()
     socket.emit('ready')
+}
+function startGame(){
     //setInterval(animate, 1000/60)
     canvas.addEventListener('mousemove',(e) => {
         playerMoved = true
@@ -267,7 +269,7 @@ function startGame() {
     })
 }
 // On Load
- startGame();
+loadGame();
 
 socket.on('connect', () => {
     console.log('Connected as..', socket.id);
