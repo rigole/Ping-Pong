@@ -3,6 +3,7 @@ const canvas = document.createElement('canvas')
 const context = canvas.getContext('2d')
 const socket = io('http://localhost:3000');
 let isReferee = false;
+let paddleIndex = 0;
 
 const width = 500
 const height = 700
@@ -12,11 +13,13 @@ const isMobile = window.matchMedia('(max-width: 600px)')
 const gameOverEl = document.createElement('div')
 
 // Paddle
-const paddleHeight = 10
-const paddleWidth = 50
-const paddleDiff = 25
-let paddleBottomX = 225
-let paddleTopX = 225
+const paddleHeight = 10;
+const paddleWidth = 50;
+const paddleDiff = 25;
+//let paddleBottomX = 225
+let paddleX = [ 225, 255 ]
+//let paddleTopX = 225
+let trajectoryX = [ 0 , 0]
 let playerMoved = false
 let paddleContact = false
 
@@ -28,7 +31,7 @@ const ballRadius = 5
 // Speed
 let speedY
 let speedX
-let trajectoryX
+//let trajectoryX
 //let computerSpeed
 
 
@@ -44,8 +47,7 @@ if (isMobile.matches){
 }
 
 // Score
-let playerScore = 0
-let computerScore = 0
+let score = [ 0, 0];
 const winningScore = 7
 let isGameOver = true
 let isNewGame = true
@@ -128,7 +130,7 @@ function ballBoundaries() {
     }
     // Bounce off player paddle (bottom)
     if (ballY > height - paddleDiff){
-        if (ballX > paddleBottomX && ballX < paddleBottomX + paddleWidth){
+        if (ballX > paddleX[0] && ballX < paddleX[0] + paddleWidth){
             paddleContact = true
             // Add Speed on Hit
             if (playerMoved){
@@ -140,7 +142,7 @@ function ballBoundaries() {
                 }
             }
             speedY = -speedY
-            trajectoryX = ballX - (paddleBottomX + paddleDiff)
+            trajectoryX = ballX - (paddleX + paddleDiff)
             speedX = trajectoryX * 0.3
         } else if (ballY > height){
             // Reset Ball, add to computer Score
@@ -236,7 +238,7 @@ function animate() {
     }
 
 }
-// Start Game, Reset Everything
+// Load Game, Reset Everything
 function loadGame() {
     if (isGameOver && !isNewGame) {
         body.removeChild(gameOverEl)
@@ -254,15 +256,16 @@ function loadGame() {
 }
 function startGame(){
     //setInterval(animate, 1000/60)
+     paddleIndex = isReferee ? 0 : 1;
     canvas.addEventListener('mousemove',(e) => {
         playerMoved = true
         // Compensate for canvas being centered
-        paddleBottomX = e.clientX - canvasPosition - paddleDiff
-        if (paddleBottomX < paddleDiff) {
-            paddleBottomX = 0
+        paddleX[paddleIndex] = e.offsetX;
+        if (paddleX[paddleIndex] < 0) {
+            paddleX[paddleIndex] = 0;
         }
-        if (paddleBottomX > width - paddleWidth){
-            paddleBottomX = width -paddleWidth
+        if (paddleX[paddleIndex] > (width - paddleWidth)){
+            paddleX[paddleIndex] = width -paddleWidth;
         }
         // Hide Cursor
         canvas.style.cursor = 'none'
@@ -280,5 +283,5 @@ socket.on('startGame', (refereeId) => {
 
     isReferee = socket.id === refereeId;
 
-    //startGame();
+    startGame();
 })
