@@ -249,6 +249,7 @@ function startGame() {
     createCanvas()
     renderIntro()
     animate()
+    socket.emit('ready')
     //setInterval(animate, 1000/60)
     canvas.addEventListener('mousemove',(e) => {
         playerMoved = true
@@ -265,4 +266,8 @@ function startGame() {
     })
 }
 // On Load
- startGame()
+ startGame();
+
+socket.on('connect', () => {
+    console.log('Connected as..', socket.id);
+})
