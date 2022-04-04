@@ -133,8 +133,31 @@ function ballBoundaries() {
     }
     // Bounce off player paddle (bottom)
     if (ballY > height - paddleDiff){
-        if (ballX > paddleX[0] && ballX < paddleX[0] + paddleWidth){
-            paddleContact = true
+        if (ballX >= paddleX[0] && ballX <= paddleX[0] + paddleWidth){
+            //paddleContact = true
+            // Add Speed on Hit
+            if (playerMoved){
+                speedY += 1
+                // Max Speed
+                if (speedY >  5){
+                    speedY = 5
+                    //computerScore = 6
+                }
+            }
+            ballDirection = -ballDirection;
+            trajectoryX[0] = ballX - (paddleX[0] + paddleDiff)
+            speedX = trajectoryX[0] * 0.3
+        } else{
+            // Reset Ball, add to player Score
+            ballReset()
+            score[1]++;
+        }
+    }
+
+    // Bounce off computer paddle
+    if (ballY < paddleDiff){
+        if (ballX > paddleX[1] && ballX <= paddleX[1] + paddleWidth){
+            //paddleContact = true
             // Add Speed on Hit
             if (playerMoved){
                 speedY += 1
@@ -148,11 +171,15 @@ function ballBoundaries() {
             trajectoryX[1] = ballX - (paddleX[1] + paddleDiff)
             speedX = trajectoryX[1] * 0.3
         } else{
-            // Reset Ball, add to player Score
+            // Reset Ball, add to computer Score
             ballReset()
             score[0]++;
         }
     }
+
+
+
+
 }
 
 
@@ -187,14 +214,14 @@ function showGameOverEl(winner) {
 }
 
 // Check if one player has a winning score, if they do, end game
-function gameOver() {
+/*function gameOver() {
     if (playerScore === winningScore || computerScore === winningScore){
         isGameOver = true
         // set Winner
         let winner = playerScore === winningScore ? 'Player 1 ' : 'Computer';
         showGameOverEl(winner)
     }
-}
+}*/
 
 
 // Wait for Opponents
