@@ -18,9 +18,7 @@ const gameOverEl = document.createElement('div')
 const paddleHeight = 10;
 const paddleWidth = 50;
 const paddleDiff = 25;
-//let paddleBottomX = 225
 let paddleX = [ 225, 255 ]
-//let paddleTopX = 225
 let trajectoryX = [ 0 , 0]
 let playerMoved = false
 let paddleContact = false
@@ -280,6 +278,9 @@ function startGame(){
         if (paddleX[paddleIndex] > (width - paddleWidth)){
             paddleX[paddleIndex] = width -paddleWidth;
         }
+        socket.emit('paddleMove', {
+            xPosition: paddleX[paddleIndex],
+        });
         // Hide Cursor
         canvas.style.cursor = 'none'
     })
@@ -289,12 +290,18 @@ loadGame();
 
 socket.on('connect', () => {
     console.log('Connected as..', socket.id);
-})
+});
 
 socket.on('startGame', (refereeId) => {
-    console.log('Referee is', refereeId)
 
+    console.log('Referee is', refereeId)
     isReferee = socket.id === refereeId;
 
     startGame();
+});
+
+socket.on('paddleMove', (paddleData) => {
+    // Toggle 1 into 0, and 0 into 1
+    const opponentPaddleIndex = 1 - paddleIndex;
+    paddleX[opponentPaddleIndex] = paddleData.xPosition
 })
